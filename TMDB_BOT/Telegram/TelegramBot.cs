@@ -5,6 +5,9 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TheMovieDBBot.Configuration;
+using TMDbLib.Client;
+using TMDbLib.Objects.General;
+using TMDbLib.Objects.Search;
 
 namespace TheMovieDBBot.Telegram
 {
@@ -13,14 +16,24 @@ namespace TheMovieDBBot.Telegram
         public ConfigurationBot config;
         ILogger loggerProvider;
 
-        private UpdateType[] allowedUpdates = new[] { UpdateType.Message };
+        private UpdateType[] allowedUpdates = new[] { UpdateType.InlineQuery };
+
+        TMDbClient client;
+        TMDbConfig client_config;
 
         public TelegramBot(ILogger logger, IConfigurationProvider configProvider) :
             base(configProvider.GetConfiguration(new ConfigurationBotValidator())!.TelegramBotToken!)
         {
             loggerProvider = logger;
             config = configProvider.GetConfiguration(new ConfigurationBotValidator());
+
+            client = new TMDbClient(config.TheMovieDBToken);
+            client_config = client.GetConfigAsync().Result;
+
+            client.DefaultLanguage = config.DefaultLanguage;
+            client.DefaultCountry = config.DefaultCountry;
         }
+
 
         async public Task Run()
         {
@@ -32,7 +45,6 @@ namespace TheMovieDBBot.Telegram
             };
 
             this.StartReceiving(UpdateHandler, ErrorHandler, _receiverOptions, cts.Token);
-
             try
             {
                 PeriodicTimer timer = new(TimeSpan.FromMilliseconds(25));
@@ -58,13 +70,22 @@ namespace TheMovieDBBot.Telegram
 
         private async Task UpdateHandler(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
         {
+            int currentPage = 0;
+            int nextPage = 0;
 
-            bool message_instance_is_not_null = update.Message != null || update.EditedMessage != null;
-            bool message_text_is_not_null = update.Message?.Text != null || update.EditedMessage?.Text != null || update.Message?.Caption != null || update.EditedMessage?.Caption != null;
-
-            if (allowedUpdates.Any(type => type.Equals(update.Type)) && message_instance_is_not_null && message_text_is_not_null)
+            int.TryParse(update.InlineQuery!.Offset, out currentPage);
+            try
             {
+                SearchContainer<SearchMovie> results = await client.SearchMovieAsync(update.InlineQuery!.Query, page: currentPage);
+                if (currentPage < results.TotalPages) nextPage = currentPage + 1;
 
+                var output = results.Results.Select(s => s.ToInlineSearchResult(client));
+                await bot.AnswerInlineQueryAsync(update.InlineQuery!.Id, output, cacheTime: 10, nextOffset: nextPage.ToString());
+            }
+            catch (Exception ex)  
+            {
+                loggerProvider.Error(ex, "Unknown error in {Bot}", nameof(TelegramBot));
+                return;
             }
         }
         private Task ErrorHandler(ITelegramBotClient botClient, Exception error, CancellationToken cancellationToken)
