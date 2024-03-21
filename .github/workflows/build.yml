@@ -35,20 +35,12 @@ jobs:
         tag_name: linux-x64
         delete_release: true
         
-    - id: lastcommit
-      uses: nmbgeek/github-action-get-latest-commit@main
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        branch: master
-        repository: ${{ github.repository }}
-        
     - name: Upload Release Asset
       uses: softprops/action-gh-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: tmdb-bot-${{ steps.lastcommit.outputs.shorthash }}
+        name: tmdb-bot
         tag_name: linux-x64
         make_latest: true
         files: /usr/share/tmdb-bot
