@@ -45,27 +45,16 @@ namespace TheMovieDBBot.Telegram
             };
 
             this.StartReceiving(UpdateHandler, ErrorHandler, _receiverOptions, cts.Token);
-            try
-            {
-                PeriodicTimer timer = new(TimeSpan.FromMilliseconds(250));
-                while (await timer.WaitForNextTickAsync(cts.Token))
-                {
-                    await Task.Run(async () =>
-                    {
-                        if (Console.KeyAvailable)
-                        {
-                            var key = Console.ReadKey();
 
-                            if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.Q)
-                            {
-                                await cts.CancelAsync();
-                                return;
-                            }
-                        }
-                    }, cts.Token);
+            while (true)
+            {
+                var key = Console.ReadKey();
+                if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.Q)
+                {
+                    await cts.CancelAsync();
+                    return;
                 }
             }
-            catch (OperationCanceledException) { }
         }
 
         private async Task UpdateHandler(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
