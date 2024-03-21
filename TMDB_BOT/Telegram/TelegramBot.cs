@@ -48,12 +48,7 @@ namespace TheMovieDBBot.Telegram
 
             while (true)
             {
-                var key = Console.ReadKey();
-                if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.Q)
-                {
-                    await cts.CancelAsync();
-                    return;
-                }
+                 Thread.Sleep(60000);
             }
         }
 
