@@ -14,7 +14,7 @@ internal class Program
         ITelegramBotInstance instance;
 
         Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console(outputTemplate: "[{Timestamp:dd-MM-yyyy HH:mm:ss} {Level}] {Message} ({SourceContext:l}) {Exception}{NewLine}")
+            .WriteTo.Console(outputTemplate: "[{Timestamp:dd-MM-yyyy HH:mm:ss} {Level}] {Message} {SourceContext:l} {Exception}{NewLine}")
             .CreateLogger();
 
         try
