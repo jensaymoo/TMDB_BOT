@@ -4,9 +4,9 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using TMDB_BOT.Configuration;
+using TheMovieDBBot.Configuration;
 
-namespace TMDB_BOT.Telegram
+namespace TheMovieDBBot.Telegram
 {
     internal class TelegramBot : TelegramBotClient, ITelegramBotInstance
     {

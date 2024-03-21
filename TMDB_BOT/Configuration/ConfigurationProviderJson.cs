@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Newtonsoft.Json;
 
-namespace TMDB_BOT.Configuration
+namespace TheMovieDBBot.Configuration
 {
     internal class ConfigurationProviderJson : IConfigurationProvider
     {

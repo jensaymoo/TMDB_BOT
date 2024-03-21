@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TMDB_BOT.Configuration;
+namespace TheMovieDBBot.Configuration;
 
 internal interface IConfigurationProvider
 {

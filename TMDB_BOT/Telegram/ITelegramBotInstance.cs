@@ -1,5 +1,5 @@
 ﻿using Telegram.Bot;
-namespace TMDB_BOT.Telegram;
+namespace TheMovieDBBot.Telegram;
 
 public interface ITelegramBotInstance : ITelegramBotClient
 {

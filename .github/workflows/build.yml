@@ -43,5 +43,6 @@ jobs:
       with:
         name: tmdb-bot
         tag_name: linux-x64
+        generate_release_notes: true
         make_latest: true
         files: /usr/share/tmdb-bot

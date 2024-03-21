@@ -1,9 +1,9 @@
 ﻿using Autofac;
 using Serilog;
-using TMDB_BOT.Configuration;
-using TMDB_BOT.Telegram;
+using TheMovieDBBot.Configuration;
+using TheMovieDBBot.Telegram;
 
-namespace TMDB_BOT;
+namespace TheMovieDBBot;
 
 internal class Program
 {
