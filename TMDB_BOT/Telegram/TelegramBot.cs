@@ -47,7 +47,7 @@ namespace TheMovieDBBot.Telegram
             this.StartReceiving(UpdateHandler, ErrorHandler, _receiverOptions, cts.Token);
             try
             {
-                PeriodicTimer timer = new(TimeSpan.FromMilliseconds(25));
+                PeriodicTimer timer = new(TimeSpan.FromMilliseconds(250));
                 while (await timer.WaitForNextTickAsync(cts.Token))
                 {
                     await Task.Run(async () =>
