@@ -61,10 +61,10 @@ namespace TheMovieDBBot.Telegram
             try
             {
                 SearchContainer<SearchMovie> results = await client.SearchMovieAsync(update.InlineQuery!.Query, page: currentPage);
-                if (currentPage < results.TotalPages) nextPage = currentPage + 1;
+                if (currentPage < (results.TotalPages - 1)) nextPage = currentPage + 1;
 
                 var output = results.Results.Select(s => s.ToInlineSearchResult(client));
-                await bot.AnswerInlineQueryAsync(update.InlineQuery!.Id, output, cacheTime: 10, nextOffset: nextPage.ToString());
+                await bot.AnswerInlineQueryAsync(update.InlineQuery!.Id, output, cacheTime: 10, nextOffset: nextPage > 0 ? nextPage.ToString() : string.Empty);
             }
             catch (Exception ex)  
             {
